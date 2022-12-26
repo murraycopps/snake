@@ -1,0 +1,232 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background: #62306D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Times New Roman";
+
+}
+
+#game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.square {
+  background: gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  user-select: none;
+  pointer-events: auto;
+}
+
+.snake {
+  /* background: #00FF00 !important; */
+}
+
+.board {
+  background: black;
+  display: grid;
+  margin: 4px;
+  position: relative;
+}
+
+/* .square:nth-child(even) {
+  background: darkgray;
+} */
+.every-other {
+  background: darkgray;
+}
+
+#end-screen {
+  display: none;
+  width: 1268px;
+  height: 632px;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  background: rgba(211, 211, 211, 0.7);
+  font-size: 5rem;
+}
+
+#reset {
+  position: absolute;
+  bottom: 20px;
+  height: 120px;
+  width: 500px;
+  background: rgba(211, 211, 211, 0.8);
+  box-shadow: 0px 0px 40px rgba(21, 21, 21, 0.8);
+  font-size: 1.5rem;
+}
+
+#a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+#game-over-screen {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  align-items: center;
+  justify-content: center;
+  background: rgba(211, 211, 211, 0.7);
+  font-size: 5rem;
+  display: flex;
+}
+
+#reset {
+  position: absolute;
+  bottom: 20px;
+  height: 80px;
+  width: 200px;
+  background: rgba(211, 211, 211, 0.8);
+  box-shadow: 0px 0px 40px rgba(21, 21, 21, 0.8);
+  font-size: 1.5rem;
+  left: calc(50% - 100px);
+}
+
+.hidden {
+  display: none;
+}
+
+.overlay-element {
+  display: grid;
+}
+
+.display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  background: #62306D;
+  width: 100%;
+  position: absolute;
+  height: 60px;
+  top: -60px;
+}
+
+.head {
+  background: #00FF00;
+  border-radius: 50%;
+  /* transition: all .1s; */
+  animation: moveHead 1s infinite;
+}
+
+:root{
+  --xPos: 1;
+  --yPos: 1;
+}
+
+@keyframes moveHead {
+  100% {
+    grid-template-columns: var(--xPos) ;
+    grid-template-rows: var(--yPos);
+  }
+}
+
+.head-north {
+  transform: rotate(0deg);
+}
+
+.head-east {
+  transform: rotate(90deg);
+}
+
+.head-south {
+  transform: rotate(180deg);
+}
+
+.head-west {
+  transform: rotate(270deg);
+}
+
+.eye {
+  background: black;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+
+.mouth-parent {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  /* transition: all 0.15s; */
+}
+
+.mouth-child {
+  background: black;
+  height: 20px;
+  animation: mouth 2s infinite;
+  position: absolute;
+  top: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%, 0 0);
+}
+
+@keyframes mouth {
+  0% {
+    width: 10px;
+    right: calc(50% - 5px);
+  }
+
+  50% {
+    width: 30px;
+    right: calc(50% - 15px);
+  }
+
+  100% {
+    width: 10px;
+    right: calc(50% - 5px);
+  }
+}
+
+
+@keyframes rotate-north {
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes rotate-east {
+  100% {
+    transform: rotate(90deg);
+  }
+}
+
+@keyframes rotate-south {
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes rotate-west {
+  100% {
+    transform: rotate(270deg);
+  }
+}
+
+
+.food {
+  background: red;
+}
+
+.snake-body {
+  background: #00FF00;
+  margin: auto;
+  /* transition: all 0.15s; */
+  transition: all 1s;
+}
