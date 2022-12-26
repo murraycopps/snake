@@ -3,6 +3,8 @@ export class Snake {
     constructor(length = 4, parent) {
         this.x = 4;
         this.y = Math.floor(parent.height / 2);
+        this.lastX = this.x;
+        this.lastY = this.y;
         this.length = length;
         this.startLength = length;
         this.direction = "start";
@@ -30,7 +32,6 @@ export class Snake {
             this.overlayElements.push(new Line(this.parent.overlay, lines[i], corner1, corner2, end));
         }
         this.parent.overlay.appendChild(this.createHead());
-
 
         document.addEventListener('keydown', (event) => {
             if (event.key == " ") {
@@ -72,7 +73,8 @@ export class Snake {
     move() {
         if (this.direction == "start") return;
 
-
+        this.lastX = this.x;
+        this.lastY = this.y;
 
         if (this.direction == "n" && this.y > 0) {
             this.y -= 1;
@@ -128,10 +130,7 @@ export class Snake {
         this.pieces.push([this.x, this.y, 1]);
         this.parent.update(this.pieces);
 
-        // console.log(this.parent.overlay.innerHTML[0]);
-        // this.parent.overlay.innerHTML = null;
-        //loop through overlay elements and remove them
-        for (var i in this.overlayElements) {
+        for(var i in this.overlayElements) {
             this.overlayElements[i].element.remove();
         }
         this.overlayElements = [];
@@ -139,10 +138,7 @@ export class Snake {
 
         var lines = this.findLines();
 
-        //if length of lines is greater than length of overlay elements remove the first element
-        if (lines.length > this.overlayElements.length) {
-            this.overlayElements.shift();
-        }
+    
         //loop through lines and overlay elements and update them
         for (var i in lines) {
             var corner1 = null;
@@ -157,12 +153,7 @@ export class Snake {
             if (i == 0) {
                 end = this.findEnd(lines[i * 1]);
             }
-            if (this.overlayElements[i] == undefined) {
                 this.overlayElements.push(new Line(this.parent.overlay, lines[i], corner1, corner2, end));
-            }
-            else {
-                this.overlayElements[i].update(lines[i], corner1, corner2, end);
-            }
         }
         this.moveHead();
 
@@ -172,19 +163,21 @@ export class Snake {
         var firstInLine = this.pieces[0];
         for (var i in this.pieces) {
             if (this.pieces[i][0] == firstInLine[0] || this.pieces[i][1] == firstInLine[1]) continue;
-            lines.push([firstInLine, this.pieces[i - 1]]);
+            lines.push([firstInLine, this.pieces[i - 1], false]);
             firstInLine = this.pieces[i - 1];
 
         }
-        lines.push([firstInLine, this.pieces[this.pieces.length - 1]]);
+        lines.push([firstInLine, this.pieces[this.pieces.length - 1], true]);
         return lines;
     }
     createHead() {
         var head = document.createElement('div');
         head.classList.add("head");
-        head.classList.add(this.directionClasses()[this.direction]);
-        head.style.gridColumn = this.x + 1;
-        head.style.gridRow = this.y + 1;
+        head.style.gridRowStart = this.y + 1;
+        head.style.gridRowEnd = this.y + 2;
+        head.style.gridColumnStart = this.x + 1;
+        head.style.gridColumnEnd = this.x + 2;
+        head.style.transform = "rotate(90deg)";
 
         var eye = document.createElement('div');
         eye.classList.add("eye");
@@ -207,19 +200,12 @@ export class Snake {
 
         return head;
     }
-    moveHead(){
-        //remove all classes from head
-        for(var i in this.directionClasses()){
-            this.head.classList.remove(this.directionClasses()[i]);
-        }
-        this.head.classList.add(this.directionClasses()[this.direction]);
-        let root = document.documentElement;
-        root.style.setProperty('--xPos', this.x+1);
-        root.style.setProperty('--yPos', this.y+1);
-        setTimeout(function(){
-            this.head.style.gridColumn = this.x + 1;
-            this.head.style.gridRow = this.y + 1;
-        }.bind(this), 1000);
+    moveHead() {
+        this.head.style.gridRowStart = this.y + 1;
+        this.head.style.gridRowEnd = this.y + 2;
+        this.head.style.gridColumnStart = this.x + 1;
+        this.head.style.gridColumnEnd = this.x + 2;
+        this.head.style.transform = `rotate(${this.direction == "n" ? 0 : this.direction == "e" ? 90 : this.direction == "s" ? 180 : 270}deg)`;
     }
     findCorner(line1, line2) {
         var corner = line1[1];
@@ -251,7 +237,6 @@ export class Snake {
         else if (corner[1] < line2[1][1]) {
             direction += "s";
         }
-        // console.log(direction)
         return direction;
     }
     findEnd(line) {
@@ -269,14 +254,5 @@ export class Snake {
             direction = "s";
         }
         return direction;
-    }
-    directionClasses() {
-        return {
-            "n": "head-north",
-            "s": "head-south",
-            "e": "head-east",
-            "w": "head-west",
-            "start": "head-east"
-        }
     }
 }

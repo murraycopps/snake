@@ -1,5 +1,5 @@
 export class Line {
-    constructor(target, line,  corner1, corner2, end) {
+    constructor(target, line, corner1, corner2, end) {
         this.xStart = line[0][0];
         this.yStart = line[0][1];
         this.xEnd = line[1][0];
@@ -7,9 +7,11 @@ export class Line {
         this.corner1 = corner1;
         this.corner2 = corner2;
         this.end = end;
+        this.target = target;
+        this.remove = false;
 
         this.element = this.createElement(line);
-        
+
         this.formatCorners(this.corner1);
         this.formatCorners(this.corner2);
         this.formatEnd(this.end);
@@ -19,20 +21,21 @@ export class Line {
     createElement(line) {
         var element = document.createElement('div');
         element.classList.add("snake-body");
-        element.style.width = (line[0][0] == line[1][0] ? "25px" : "calc(100% - 15px)");
-        element.style.height = (line[0][1] == line[1][1] ? "25px" : "calc(100% - 15px)");
+
+        element.style.width = line[0][0] == line[1][0] ? "25px" : "calc(100% - 15px)";
+        element.style.height = line[0][1] == line[1][1] ? "25px" : "calc(100% - 15px)";
 
         if (line[0][0] < line[1][0] || line[0][1] < line[1][1]) {
-            element.style.gridColumnStart = (line[0][0] + 1).toString();
-            element.style.gridColumnEnd = (line[1][0] + 2).toString();
-            element.style.gridRowStart = (line[0][1] + 1).toString();
-            element.style.gridRowEnd = (line[1][1] + 2).toString();
+            element.style.gridRowStart = line[0][1] + 1;
+            element.style.gridColumnStart = line[0][0] + 1;
+            element.style.gridRowEnd = line[1][1] + 2;
+            element.style.gridColumnEnd = line[1][0]    + 2;
         }
         else {
-            element.style.gridColumnStart = (line[0][0] + 2).toString();
-            element.style.gridColumnEnd = (line[1][0] + 1).toString();
-            element.style.gridRowStart = (line[0][1] + 2).toString();
-            element.style.gridRowEnd = (line[1][1] + 1).toString();
+            element.style.gridRowStart = line[1][1] + 1;
+            element.style.gridColumnStart = line[1][0] + 1;
+            element.style.gridRowEnd = line[0][1] + 2;
+            element.style.gridColumnEnd = line[0][0] + 2;;  
         }
 
         return element;
@@ -60,7 +63,7 @@ export class Line {
     formatCorners(corner) {
         switch (corner) {
             case "nw":
-               this.element.style.borderBottomRightRadius = "100vw";
+                this.element.style.borderBottomRightRadius = "100vw";
                 break;
             case "ne":
                 this.element.style.borderBottomLeftRadius = "100vw";
@@ -85,5 +88,5 @@ export class Line {
                 break;
         }
     }
-    
+
 }

@@ -50,7 +50,7 @@ export class Board {
       if (!this.game.playing) {
         clearInterval(interval);
       }
-    }, 1000);   
+    }, 100);   
   }
 
   update(pieces) {
